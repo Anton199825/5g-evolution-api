@@ -1,0 +1,7 @@
+version: '3'
+services:
+  api:
+    build: .
+    container_name: api-kloth
+    ports:
+      - "8080:8080"

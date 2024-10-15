@@ -1,0 +1,183 @@
+openapi: 3.0.1
+info:
+  contact:
+    name: AV Chair, Ronny Kreuch  
+    email: ronny.kreuch@tu-berlin.de  
+    url: 'https://www.tu.berlin/av/'  
+  description: RESTful API for student assessment of 5G Evolution/6G Project
+  license:
+    name: Apache 2.0  
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  title: AV Assessment API
+  version: '2.3'
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  /background:
+    get:
+      description: Please provide some of your background knowledge relevant to this course
+      operationId: background_get
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 1
+                uniqueItems: true
+                items:
+                  example: Almost completed the entire bachelor's degree in business informatics. I was able to learn several programming languages and gain insights into topics ranging from IT security to software engineering to theoretical computer science.
+                  type: string
+      summary: Returns relevant background for 5G Evolution/6G Projects (e.g. courses, work experience, other projects)
+  /email:
+    get:
+      description: Please provide your e-mail address, which we can use to contact you
+      operationId: email_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                example: anton.l.kloth@campus.tu-berlin.de  
+                type: string
+          description: OK
+      summary: Returns the e-mail address of the student
+  /mtknr:
+    get:
+      description: Please provide your matriculation number
+      operationId: mtknr_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                example: '402128'
+                type: string
+          description: OK
+      summary: Returns the matriculation number of the student
+  /name:
+    get:
+      description: Please provide your full name
+      operationId: name_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                example: Anton Larry Kloth  
+                type: string
+          description: OK
+      summary: Returns the name of the student
+  /programOfStudy:
+    get:
+      description: Please indicate your study program and degree (Bachelor or Master) in which you are currently enrolled
+      operationId: program_of_study_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgramOfStudy'
+          description: OK
+      summary: Returns the program of study for which the student is enrolled
+  /skills:
+    get:
+      description: Please indicate skills that you already have and that are relevant for the work on the project topic
+      operationId: skills_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/KeyValueList'
+                type: array
+          description: OK
+      summary: Returns relevant skills for the 5G Evolution/6G Projects (e.g. programming languages, tools, network protocols)
+  /topics:
+    get:
+      description: Please provide up to three project topics you are interested in from the set of project topics presented in the kick-off and indicate your priority (1=highest, 3=lowest)
+      operationId: topics_get
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    '1': Network paths performances analyzer 
+                    '2': Monitoring interface for 5G private network  
+                    '3': Provisioning subscribers to 5G-IMS platform  
+              schema:
+                $ref: '#/components/schemas/Topics'
+          description: OK
+      summary: Returns the favored project topics of the student with indication of priority
+components:
+  schemas:
+    KeyValueList:
+      description: A map of <key,value> where the value is a list of string
+      example:
+        key: programming languages 
+        value:
+          - Java  
+          - Python  
+          - C++
+          - Haskell
+          - Scala
+          - SQL
+      properties:
+        key:
+          example: programming languages
+          title: key
+          type: string
+        value:
+          items:
+            example: Java
+            type: string
+          title: value
+          type: array
+      title: KeyValueList
+      type: object
+    ProgramOfStudy:
+      example:
+        degree: Bachelor  
+        study_program: Business informatics (Wirtschaftsinformatik)
+      properties:
+        study_program:
+          minLength: 1
+          title: study_program
+          type: string
+        degree:
+          minLength: 1
+          title: degree
+          type: string
+      required:
+        - degree
+        - study_program
+      title: ProgramOfStudy
+      type: object
+    Topics:
+      example:
+        '1': '1'
+        '2': '2'
+        '3': '3'
+      properties:
+        '1':
+          minLength: 1
+          title: '1'
+          type: string
+        '2':
+          minLength: 1
+          title: '2'
+          type: string
+        '3':
+          minLength: 1
+          title: '3'
+          type: string
+      required:
+        - '1'
+        - '2'
+        - '3'
+      title: Topics
+      type: object
